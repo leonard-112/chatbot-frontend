@@ -14,11 +14,14 @@ if "messages" not in st.session_state:
 if "user_id" not in st.session_state:
   st.session_state.user_id = ""
 
+if "sidebar_visible" not in st.session_state:
+  st.session_state.sidebar_visible = True
+
 # Set the title for the browser tab
 st.set_page_config(
   page_title="Chatbot",
   page_icon=":smiley:",
-  initial_sidebar_state="collapsed"
+  initial_sidebar_state="expanded" if st.session_state.sidebar_visible else "collapsed"
 )
 
 # Read and inject the external CSS file
@@ -32,15 +35,33 @@ def onLogoutClick():
   st.session_state.user_id = ""
   st.session_state.messages = []
 
+def toggle_sidebar():
+  st.session_state.sidebar_visible = not st.session_state.sidebar_visible
+  st.rerun()
+
 if st.session_state.user_id == "":
   # Styled title
   st.markdown('<h1 class="custom-title">Chatbot</h1>', unsafe_allow_html=True)
   user_id = st.text_input("Enter your nickname", help="Type something here")
   st.button("Enter", on_click=onLoginClick)
 else:
-  st.sidebar.title("Chatbot")
-  st.sidebar.write(f"Logged in as {st.session_state.user_id}")
-  st.sidebar.button("Logout", on_click=onLogoutClick)
+  with st.sidebar:
+    st.title("Chatbot")
+    st.write(f"Logged in as {st.session_state.user_id}")
+    st.button("Logout", on_click=onLogoutClick)
+
+  if not st.session_state.sidebar_visible:
+    if st.button("...", key="expand_btn"):
+        toggle_sidebar()
+  else:
+      if st.button("...", key="collapse_btn"):
+        toggle_sidebar()
+
+  if not st.session_state.sidebar_visible:
+    st.markdown("<style>section[data-testid='stSidebar'] {display: none;}</style>", unsafe_allow_html=True)
+  else:
+    st.markdown("<style>section[data-testid=' '] {display: block;}</style>", unsafe_allow_html=True)
+
   try:
     response = requests.post(f"{BACKEND_URL}/chat/history", json={"user_id":st.session_state.user_id})
     response.raise_for_status()
