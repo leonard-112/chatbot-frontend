@@ -12,7 +12,7 @@ BACKEND_URL = os.getenv("BACKEND_URL")
 st.set_page_config(
   page_title="Chatbot",
   page_icon=":smiley:",
-  initial_sidebar_state="expanded"
+  initial_sidebar_state="collapsed"
 )
 
 # Read and inject the external CSS file
