@@ -43,7 +43,7 @@ if st.session_state.user_id == "":
   # Styled title
   st.markdown('<h1 class="custom-title">Chatbot</h1>', unsafe_allow_html=True)
   user_id = st.text_input("Enter your nickname", help="Type something here")
-  st.button("Enter", on_click=onLoginClick)
+  st.button("Login", on_click=onLoginClick)
 else:
   with st.sidebar:
     st.title("Chatbot")
