@@ -5,8 +5,14 @@ import streamlit as st
 import requests
 import os
 
-
 BACKEND_URL = os.getenv("BACKEND_URL")
+
+# Initialize session state
+if "messages" not in st.session_state:
+  st.session_state.messages = []
+
+if "user_id" not in st.session_state:
+  st.session_state.user_id = ""
 
 # Set the title for the browser tab
 st.set_page_config(
@@ -18,12 +24,6 @@ st.set_page_config(
 # Read and inject the external CSS file
 with open("styles.css") as f:
   st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
-if "messages" not in st.session_state:
-  st.session_state.messages = []
-
-if "user_id" not in st.session_state:
-  st.session_state.user_id = ""
 
 def onLoginClick():
   st.session_state.user_id = user_id
@@ -40,7 +40,7 @@ if st.session_state.user_id == "":
 else:
   with st.sidebar:
     st.title("Chatbot")
-    st.write(f"Logged in as  {st.session_state.user_id}")
+    st.write(f"Logged in as {st.session_state.user_id}")
     st.button("Logout", on_click=onLogoutClick)
   try:
     response = requests.post(f"{BACKEND_URL}/chat/history", json={"user_id":st.session_state.user_id})
