@@ -38,10 +38,9 @@ if st.session_state.user_id == "":
   user_id = st.text_input("Enter your nickname", help="Type something here")
   st.button("Enter", on_click=onLoginClick)
 else:
-  with st.sidebar:
-    st.title("Chatbot")
-    st.write(f"Logged in as {st.session_state.user_id}")
-    st.button("Logout", on_click=onLogoutClick)
+  st.sidebar.title("Chatbot")
+  st.sidebar.write(f"Logged in as {st.session_state.user_id}")
+  st.sidebar.button("Logout", on_click=onLogoutClick)
   try:
     response = requests.post(f"{BACKEND_URL}/chat/history", json={"user_id":st.session_state.user_id})
     response.raise_for_status()
